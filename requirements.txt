@@ -1,0 +1,8 @@
+pandas
+numpy
+streamlit
+PIL
+base64
+plotly
+nltk
+sklearn
