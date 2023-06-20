@@ -6,7 +6,7 @@
 This project focuses on visualizing data from the Google Store dataset obtained from Kaggle. The goal is to analyze and present insights about the applications available on the Google Store.
 
 ## Folder Structure
-### ./streamlit
+### /.streamlit
 This folder contains a 'config' file that sets up a default theme for running the application on any user's computer.
 
 ### /data
