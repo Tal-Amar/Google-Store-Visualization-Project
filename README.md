@@ -12,8 +12,8 @@ This folder contains a 'config' file that sets up a default theme for running th
 ### /data
 The dataset used in this project is sourced from Kaggle. You can find it [here](https://www.kaggle.com/datasets/geothomas/playstore-dataset). The dataset has been processed and divided into four sub-datasets, each catering to a specific chart or analysis. Additionally, the folder includes:
 
-A stopwords text file used for text analysis in the word bubble chart.
-A currency JSON file for converting application prices into USD terms.
+*A stopwords text file used for text analysis in the word bubble chart.
+*A currency JSON file for converting application prices into USD terms.
 
 ### /design
 This folder contains the Google Store icon, which is displayed in the HTML head section of the application.
