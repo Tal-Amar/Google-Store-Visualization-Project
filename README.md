@@ -22,6 +22,7 @@ This folder contains the Google Store icon, which is displayed in the HTML head 
 This folder contains the code for data preprocessing, including cleaning and preparing the dataset. It also includes code for creating sub-datasets that are used for generating the charts and visualizations.
 
 
+
 **Feel free to explore the different folders and files to understand the project structure and how it processes and visualizes the Google Store dataset.**
 
 **For a live demonstration of the project, you can visit the Streamlit app by clicking on the badge above.**
