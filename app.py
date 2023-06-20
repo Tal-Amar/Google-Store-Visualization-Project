@@ -76,23 +76,19 @@ def cumulative_bar_plot(df: pd.DataFrame):
     # Draw separate line
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    # Extract the required columns, 'Year' created in 'clean_dataset' function.
-    df_chart = df[['Category', 'Rating', 'Year']].copy()
-
-    df_chart.to_csv('data/cumulative_bar_plot.csv')
     # Main panel:
     st.subheader("Number of Applications per Category (Top-10)")
     # Choosing number of categories to present (filter them later)
     # Filter the dataframe based on the selected year range
     year_range = st.slider(
         "Select Year Range",
-        min_value=int(df_chart['Year'].min()),
-        max_value=int(df_chart['Year'].max()),
-        value=(int(df_chart['Year'].min()), int(df_chart['Year'].max()))
+        min_value=int(df['Year'].min()),
+        max_value=int(df['Year'].max()),
+        value=(int(df['Year'].min()), int(df['Year'].max()))
     )
     ChangeWidgetFontSize("Select Year Range", '18px')
 
-    filtered_df = df_chart[df_chart['Year'].between(*year_range)]
+    filtered_df = df[df['Year'].between(*year_range)]
     # Draw separate line
 
     # Chart:
@@ -154,11 +150,10 @@ def lines_plot(df: pandas.DataFrame):
     st.markdown("<hr>", unsafe_allow_html=True)
     st.subheader("Average Rating and Average Installs across Price")
 
-    # Extract the required columns, 'Year' created in 'clean_dataset' function.
-    df_chart = df[['Rating', 'Minimum Installs', 'Price', 'Free']].copy()
-    df_chart['Minimum Installs'] = df_chart['Minimum Installs'].apply(lambda x: np.log(x + 1))
+    # Convert to log-scale for better presentation
+    df['Minimum Installs'] = df['Minimum Installs'].apply(lambda x: np.log(x + 1))
 
-    df_chart = df_chart[df_chart["Price"] <= 10]
+    df_chart = df[df["Price"] <= 10]
 
     # Define the bin edges and labels
     bin_edges = [i * 0.1 - 0.01 for i in range(102)]
@@ -273,9 +268,6 @@ def words_scatter_plot(df: pandas.DataFrame):
     # Draw separate line
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    df_chart = df[['Rating', 'Minimum Installs', 'Summary']].copy()
-    df_chart.dropna(inplace=True)
-
     # Sidebar:
     st.subheader("Words' success in Top Apps")
     # Choosing option for the minimum apps for a word - to present
@@ -285,7 +277,7 @@ def words_scatter_plot(df: pandas.DataFrame):
     # Separate line
 
     # filter only top XX - most success (Installs and Rating combination)
-    filtered_df = df_chart[df_chart['Minimum Installs'] > 10000000]
+    filtered_df = df[df['Minimum Installs'] > 10000000]
     # "title_top" - format for title, later on...
     top_words_ratings, title_top = filtered_df.nlargest(50, 'Rating'), 50
     # if apps_number == '50':
@@ -379,9 +371,6 @@ def box_subplots(df: pandas.DataFrame):
     # Draw separate line
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    # create a data frame for the specific category
-    df.dropna(inplace=True)
-
     # Sidebar:
     st.subheader('Parameters for Chosen Category')
     # Choosing multiselect categories to present in char
@@ -446,19 +435,16 @@ def box_subplots(df: pandas.DataFrame):
 
 
 if __name__ == "__main__":
-    drive_read = True
-    # if drive_read:
-    #     csv_url = 'https://drive.google.com/uc?export=download&id=1fVIJDdBDb2D5wiIrzrmVxogglRwVcdNM'
-    #     df_cleaned = pd.read_csv(csv_url)
-    # else:
-    #     df_cleaned = pd.read_csv("data/Playstore_final_processed.csv", error_bad_lines=False)
     create_title()
     # Chart 1
     chart1_df = pd.read_csv("data/cumulative_bar_plot.csv")
     cumulative_bar_plot(chart1_df)
     # Chart 2
-    # lines_plot(df_cleaned)
+    chart2_df = pd.read_csv("data/lines_plot.csv")
+    lines_plot(chart2_df)
     # Chart 3
-    # words_scatter_plot(df_cleaned)
+    chart3_df = pd.read_csv("data/words_scatter_plot.csv")
+    words_scatter_plot(chart3_df)
     # Chart 4
-    # box_subplots(df_cleaned)
+    chart4_df = pd.read_csv("data/box_subplots.csv")
+    box_subplots(chart4_df)

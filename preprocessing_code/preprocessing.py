@@ -50,18 +50,38 @@ def clean_dataset(df: pd.DataFrame):
     df['Content Rating'] = df['Content Rating'].replace(rating_mapping)
 
     # Convert 'Price' by 'Currency' USD using currency's dict
-    with open('data/conversion_currencies.json', 'r') as file:
+    with open('../data/conversion_currencies.json', 'r') as file:
         conversion_currencies = json.load(file)
 
     df['conversion_currency'] = df['Currency'].map(conversion_currencies)
-    df['Price_USD'] = df['Price'] * df['conversion_currency']
+    df['Price'] = df['Price'] * df['conversion_currency']
     df.drop('conversion_currency', axis=1, inplace=True)
 
     return df
 
 
+def create_sub_dfs(df: pd.DataFrame):
+    """
+    Create sub-dfs for every chart witch is presented in the html.
+    """
+
+    df_chart1 = df[['Category', 'Rating', 'Year']].copy()
+    df_chart1.to_csv('../data/cumulative_bar_plot.csv', index=False)
+
+    df_chart2 = df[['Rating', 'Minimum Installs', 'Price', 'Free']].copy()
+    df_chart2.to_csv('../data/lines_plot.csv', index=False)
+
+    df_chart3 = df[['Rating', 'Minimum Installs', 'Summary']].copy()
+    df_chart3.dropna(inplace=True)
+    df_chart3.to_csv('../data/words_scatter_plot.csv', index=False)
+
+    df_chart4 = df[['Free', 'Ad Supported', 'In app purchases', 'Category', 'Content Rating', 'Rating']].copy()
+    df_chart4.dropna(inplace=True)
+    df_chart4.to_csv('../data/box_subplots.csv', index=False)
+
 if __name__ == "__main__":
-    data = pd.read_csv("data/Playstore_final.csv", error_bad_lines=False)
+    data = pd.read_csv("C:\Tal\Data Engineer\BSc\Information Visualization\project/Playstore_final.csv", error_bad_lines=False)
     data = data.iloc[:, :29]  # Empty columns' not in use
     df_cleaned = clean_dataset(data)
-    df_cleaned.to_csv("data/Playstore_final_processed.csv")
+    create_sub_dfs(df_cleaned)
+    # df_cleaned.to_csv("../data/Playstore_final_processed.csv")
