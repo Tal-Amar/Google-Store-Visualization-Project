@@ -79,6 +79,7 @@ def cumulative_bar_plot(df: pd.DataFrame):
     # Extract the required columns, 'Year' created in 'clean_dataset' function.
     df_chart = df[['Category', 'Rating', 'Year']].copy()
 
+    df_chart.to_csv('data/cumulative_bar_plot.csv')
     # Main panel:
     st.subheader("Number of Applications per Category (Top-10)")
     # Choosing number of categories to present (filter them later)
@@ -446,17 +447,18 @@ def box_subplots(df: pandas.DataFrame):
 
 if __name__ == "__main__":
     drive_read = True
-    if drive_read:
-        csv_url = 'https://drive.google.com/uc?export=download&id=1fVIJDdBDb2D5wiIrzrmVxogglRwVcdNM'
-        df_cleaned = pd.read_csv(csv_url)
-    else:
-        df_cleaned = pd.read_csv("data/Playstore_final_processed.csv", error_bad_lines=False)
+    # if drive_read:
+    #     csv_url = 'https://drive.google.com/uc?export=download&id=1fVIJDdBDb2D5wiIrzrmVxogglRwVcdNM'
+    #     df_cleaned = pd.read_csv(csv_url)
+    # else:
+    #     df_cleaned = pd.read_csv("data/Playstore_final_processed.csv", error_bad_lines=False)
     create_title()
     # Chart 1
-    cumulative_bar_plot(df_cleaned)
+    chart1_df = pd.read_csv("data/cumulative_bar_plot.csv")
+    # cumulative_bar_plot(df_cleaned)
     # Chart 2
-    lines_plot(df_cleaned)
+    # lines_plot(df_cleaned)
     # Chart 3
-    words_scatter_plot(df_cleaned)
+    # words_scatter_plot(df_cleaned)
     # Chart 4
-    box_subplots(df_cleaned)
+    # box_subplots(df_cleaned)
