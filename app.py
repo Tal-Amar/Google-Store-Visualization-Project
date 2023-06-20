@@ -455,7 +455,7 @@ if __name__ == "__main__":
     create_title()
     # Chart 1
     chart1_df = pd.read_csv("data/cumulative_bar_plot.csv")
-    # cumulative_bar_plot(df_cleaned)
+    cumulative_bar_plot(chart1_df)
     # Chart 2
     # lines_plot(df_cleaned)
     # Chart 3
