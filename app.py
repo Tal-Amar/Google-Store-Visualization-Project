@@ -445,15 +445,16 @@ def box_subplots(df: pandas.DataFrame):
 
 
 if __name__ == "__main__":
-    df_cleaned = pd.read_csv("data/Playstore_final_processed.csv", error_bad_lines=False)
-    # data = data.iloc[:, :29]
-    # df_cleaned = clean_dataset(data)
+    drive_read = True
+    if drive_read:
+        csv_url = 'https://drive.google.com/uc?export=download&id=1fVIJDdBDb2D5wiIrzrmVxogglRwVcdNM'
+        df_cleaned = pd.read_csv(csv_url)
+    else:
+        df_cleaned = pd.read_csv("data/Playstore_final_processed.csv", error_bad_lines=False)
     create_title()
     # Chart 1
     cumulative_bar_plot(df_cleaned)
-    # cumulative_bar_plot(df_cleaned)
     # Chart 2
-    # line_plot(df_cleaned)
     lines_plot(df_cleaned)
     # Chart 3
     words_scatter_plot(df_cleaned)
