@@ -47,6 +47,10 @@ def create_title():
             <img src="data:image/png;base64,{base64.b64encode(open(google_play_icon_path, 'rb').read()).decode()}" alt="Google Play Store Icon" width="50" height="50">
             <h1 class="title-text">Play-Store Dataset</h1>
         </div>
+        <hr>
+        <div style='font-size: 16px;color: black;'> 
+             Explore insightful analyses and visualizations of the app ecosystem to gain valuable insights that can help you make informed decisions for creating better applications. Uncover trends, correlations, and influences within categories, pricing, user ratings, word choices, and developer decisions, providing actionable knowledge for optimizing your own app development strategies in the Google Apps Store.
+             </div>
         """,
         unsafe_allow_html=True
     )
@@ -77,7 +81,14 @@ def cumulative_bar_plot(df: pd.DataFrame):
     st.markdown("<hr>", unsafe_allow_html=True)
 
     # Main panel:
-    st.subheader("Number of Applications per Category (Top-10)")
+    st.subheader("Application Publications per Category (Top 10)")
+    # Add chart details
+    st.markdown("""
+        <div style='font-size: 16px;color: black;'> 
+            Explore the number of apps released per category, sorted in descending order, with color-coded average rankings. Adjust the year range for insightful trend analysis.
+        </div>
+        <br>
+        """, unsafe_allow_html=True)
     # Choosing number of categories to present (filter them later)
     # Filter the dataframe based on the selected year range
     year_range = st.slider(
@@ -137,6 +148,7 @@ def cumulative_bar_plot(df: pd.DataFrame):
         title=dict(text='Average Rating', font=dict(size=16, color='black'))
         )
     )
+    fig.update_layout(width=800, showlegend=False)
 
     # Display
     st.write(fig)
@@ -148,7 +160,12 @@ def lines_plot(df: pandas.DataFrame):
     """
 
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.subheader("Average Rating and Average Installs across Price")
+    st.subheader("Average Rating and Number of Installs across Prices")
+    st.markdown("""
+        <div style='font-size: 16px;color: black;'> 
+            Visualize the correlation between application price and number of installs, as well as price and average rating, using an interactive line plot. Hover to view simultaneous price and curve values, and toggle between the two lines for focused analysis.
+             </div>
+        """, unsafe_allow_html=True)
 
     # Extract the required columns, 'Year' created in 'clean_dataset' function.
     df['Minimum Installs'] = df['Minimum Installs'].apply(lambda x: np.log(x + 1))
@@ -209,7 +226,7 @@ def lines_plot(df: pandas.DataFrame):
         text=Installs_price['Original_Minimum_Installs'],
         name='Average Installs'
     ))
-    fig.update_yaxes(showline=True, linecolor='white', mirror=True, zerolinecolor='white')
+    fig.update_yaxes(showline=True, linecolor='white', mirror=True, zerolinecolor='#dce2f7')
     fig.update_layout(hovermode="x")
     fig.update_layout(
         xaxis=dict(
@@ -222,11 +239,13 @@ def lines_plot(df: pandas.DataFrame):
             title=dict(text='Normalized succses', font=dict(size=18, color='black')),
             gridcolor='#dce2f7'),
         hoverlabel=dict(
-            bgcolor="white",
+            bgcolor="#cccccc",
             font_color="black",
             font_size=14
         )
     )
+    fig.update_layout(legend=dict(font=dict(size=16)))
+    fig.update_layout(width=800, showlegend=True)
 
     st.write(fig)
 
@@ -240,14 +259,22 @@ def words_scatter_plot(df: pandas.DataFrame):
 
     # Draw separate line
     st.markdown("<hr>", unsafe_allow_html=True)
+    st.subheader("Word Analysis: Rating, Installs, and Frequency")
+    st.markdown("""
+        <div style='font-size: 16px;color: black;'> 
+            Explore word correlations in top app descriptions through a scatter plot. Words are positioned based on average ratings and installs, with point size indicating appearance frequency. Adjust filters for minimum appearances and top app selection to gain insights into influential keywords.
+            </div>
+        <br>
+        """, unsafe_allow_html=True)
 
     # Sidebar:
-    st.subheader("Words' success in Top Apps")
     # Choosing option for the minimum apps for a word - to present
-    min_apps = st.number_input('Enter minimum number of apps a word should appear in:', value=3, step=1)
+    st.number_input('Minimum number of appearances:', value=3, step=1)
     top_apps_options = ['50', '100', '500', '1000']
-    apps_number = st.selectbox("Number of Top Apps", top_apps_options)
-    # Separate line
+    apps_number = st.selectbox("Number of Top Apps:", top_apps_options)
+    ChangeWidgetFontSize("Minimum number of appearances:", '18px')
+    ChangeWidgetFontSize("Number of Top Apps:", '18px')
+
 
     # filter only top XX - most success (Installs and Rating combination)
     filtered_df = df[df['Minimum Installs'] > 10000000]
@@ -343,9 +370,14 @@ def box_subplots(df: pandas.DataFrame):
 
     # Draw separate line
     st.markdown("<hr>", unsafe_allow_html=True)
+    st.subheader('Developer Decision Impact on Average Rating')
+    st.markdown("""
+        <div style='font-size: 16px;color: black;'> 
+            Analyze the effect of app developer decisions on average ratings through an interactive box plot. Adjust the category selection to explore specific decision factors and their influence on user ratings.
+            </div>
+        <br>
+        """, unsafe_allow_html=True)
 
-    # Sidebar:
-    st.subheader('Parameters for Chosen Category')
     # Choosing multiselect categories to present in char
     cat_apps = list(set(df['Category'].to_list()))
     chosen_category = st.selectbox("Categories", cat_apps)
