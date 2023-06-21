@@ -150,7 +150,7 @@ def lines_plot(df: pandas.DataFrame):
     st.markdown("<hr>", unsafe_allow_html=True)
     st.subheader("Average Rating and Average Installs across Price")
 
-    # Convert to log-scale for better presentation
+    # Extract the required columns, 'Year' created in 'clean_dataset' function.
     df['Minimum Installs'] = df['Minimum Installs'].apply(lambda x: np.log(x + 1))
 
     df_chart = df[df["Price"] <= 10]
@@ -171,22 +171,20 @@ def lines_plot(df: pandas.DataFrame):
     Rating_price['Normalized_Smoothed_Rating'] = Rating_price['Smoothed_Rating'].apply(
         lambda x: (x - min(Rating_price['Smoothed_Rating'])) / (
                     max(Rating_price['Smoothed_Rating']) - min(Rating_price['Smoothed_Rating'])))
+    Rating_price['Smoothed_Rating'] = Rating_price['Smoothed_Rating'].apply(lambda x: np.round(x, 3))
 
     Installs_price = df_chart.groupby('Bin_Labels')['Minimum Installs'].mean().reset_index()
     Installs_price = Installs_price.sort_values(by='Bin_Labels')
 
-    window_size = 6
-    Installs_price['Smoothed_Installs'] = Installs_price['Minimum Installs'].rolling(
-        window=window_size, min_periods=1).mean().reset_index(0, drop=True)
+    # window_size=6
+    Installs_price['Smoothed_Installs'] = Installs_price['Minimum Installs'].rolling(window=window_size,
+                                                                                     min_periods=1).mean().reset_index(
+        0, drop=True)
     Installs_price['Normalized_Smoothed_Installs'] = Installs_price['Smoothed_Installs'].apply(
         lambda x: (x - min(Installs_price['Smoothed_Installs'])) / (
                     max(Installs_price['Smoothed_Installs']) - min(Installs_price['Smoothed_Installs'])))
     Installs_price['Original_Minimum_Installs'] = Installs_price['Smoothed_Installs'].apply(
-        lambda x: np.power(np.e, x) - 1)
-
-    # Round values for presentation "hover"
-    Rating_price['Smoothed_Rating'] = Rating_price['Smoothed_Rating'].round(2)
-    Installs_price['Original_Minimum_Installs'] = Installs_price['Original_Minimum_Installs'].round(2)
+        lambda x: np.round(np.power(np.e, x) - 1, 3))
 
     # Create line plot
     fig = go.Figure()
@@ -196,66 +194,39 @@ def lines_plot(df: pandas.DataFrame):
         y=Rating_price['Normalized_Smoothed_Rating'],
         mode='lines',
         marker=dict(color='#B3304C'),
-        name='Average Rating',
-        hovertemplate='Rating = %{text}<br>Price = %{x}',
+        hovertemplate='%{text}',
+        hoverlabel=dict(bgcolor='#EA738D'),
         text=Rating_price['Smoothed_Rating'],
-        hoverlabel=dict(bgcolor='#EA738D')
+        name='Average Rating'
     ))
     fig.add_trace(go.Scatter(
         x=Installs_price['Bin_Labels'],
         y=Installs_price['Normalized_Smoothed_Installs'],
         mode='lines',
         marker=dict(color='#224193'),
-        name='Average Installs',
-        hovertemplate='Installs = %{text}<br>Price = %{x}',
+        hovertemplate='%{text}',
+        hoverlabel=dict(bgcolor='#89ABE3'),
         text=Installs_price['Original_Minimum_Installs'],
-        hoverlabel=dict(bgcolor='#89ABE3')
+        name='Average Installs'
     ))
-    fig.update_traces(hoverlabel=dict(font=dict(color='black')))
     fig.update_yaxes(showline=True, linecolor='white', mirror=True, zerolinecolor='white')
+    fig.update_layout(hovermode="x")
     fig.update_layout(
         xaxis=dict(
             tickfont=dict(size=16, color='black'),
             title=dict(text='Price', font=dict(size=18, color='black')),
             categoryorder='array',
-            linecolor='black',
             gridcolor='#dce2f7'),
         yaxis=dict(
             tickfont=dict(size=16, color='black'),
             title=dict(text='Normalized succses', font=dict(size=18, color='black')),
-            linecolor='black',
-            showgrid=False,
-            gridcolor='#dce2f7'),  # Set the grid color for y-axis
-        legend=dict(
-            title=dict(font=dict(size=16, color='black')),
-            font=dict(
-                size=16,  # Change the size to whatever you prefer
-                color="black"
-            )
+            gridcolor='#dce2f7'),
+        hoverlabel=dict(
+            bgcolor="white",
+            font_color="black",
+            font_size=14
         )
     )
-    fig.update_yaxes(
-        range=[0, 'auto'],  # sets the range of yaxis from 0 to automatic
-        showline=True,
-        showticklabels=False,
-        linecolor='black',
-        mirror=True,
-        zerolinecolor='white'
-    )
-    fig.update_xaxes(
-        range=[0, 'auto'],  # sets the range of yaxis from 0 to automatic
-        showline=True,
-        # linecolor='white',
-        mirror=True,
-        zerolinecolor='black'
-    )
-    fig.update_coloraxes(colorbar=dict(
-        tickfont=dict(size=18, color='black'),
-        title=dict(font=dict(size=18, color='black'))
-        )
-    )
-
-    fig.update_layout(width=700)
 
     st.write(fig)
 
