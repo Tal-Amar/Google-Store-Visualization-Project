@@ -199,6 +199,7 @@ def lines_plot(df: pandas.DataFrame):
         name='Average Rating',
         hovertemplate='Rating = %{text}<br>Price = %{x}',
         text=Rating_price['Smoothed_Rating'],
+        hoverlabel=dict(bgcolor='#EA738D')
     ))
     fig.add_trace(go.Scatter(
         x=Installs_price['Bin_Labels'],
@@ -208,6 +209,7 @@ def lines_plot(df: pandas.DataFrame):
         name='Average Installs',
         hovertemplate='Installs = %{text}<br>Price = %{x}',
         text=Installs_price['Original_Minimum_Installs'],
+        hoverlabel=dict(bgcolor='#89ABE3')
     ))
     fig.update_traces(hoverlabel=dict(font=dict(color='black')))
     fig.update_yaxes(showline=True, linecolor='white', mirror=True, zerolinecolor='white')
