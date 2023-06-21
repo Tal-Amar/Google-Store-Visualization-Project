@@ -269,7 +269,7 @@ def words_scatter_plot(df: pandas.DataFrame):
 
     # Sidebar:
     # Choosing option for the minimum apps for a word - to present
-    st.number_input('Minimum number of appearances:', value=3, step=1)
+    min_apps = st.number_input('Minimum number of appearances:', value=3, step=1)
     top_apps_options = ['50', '100', '500', '1000']
     apps_number = st.selectbox("Number of Top Apps:", top_apps_options)
     ChangeWidgetFontSize("Minimum number of appearances:", '18px')
