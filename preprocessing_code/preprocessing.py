@@ -80,7 +80,7 @@ def create_sub_dfs(df: pd.DataFrame):
     df_chart4.to_csv('../data/box_subplots.csv', index=False)
 
 if __name__ == "__main__":
-    data = pd.read_csv("C:\Tal\Data Engineer\BSc\Information Visualization\project/Playstore_final.csv", error_bad_lines=False)
+    data = pd.read_csv("../data/Playstore_final.csv", error_bad_lines=False)
     data = data.iloc[:, :29]  # Empty columns' not in use
     df_cleaned = clean_dataset(data)
     create_sub_dfs(df_cleaned)
